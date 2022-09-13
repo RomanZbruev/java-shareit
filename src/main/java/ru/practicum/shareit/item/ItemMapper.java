@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 @Component
 public class ItemMapper {
 
-    public ItemDto mapFromItem(Item item){
+    public ItemDto mapFromItem(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -16,7 +16,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public Item mapFromItemDto(ItemDto itemDto){
+    public Item mapFromItemDto(ItemDto itemDto) {
         return Item.builder()
                 .id(itemDto.getId())
                 .name(itemDto.getName())

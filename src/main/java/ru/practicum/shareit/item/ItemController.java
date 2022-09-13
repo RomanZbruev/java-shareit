@@ -22,32 +22,32 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long ownerId,@Valid @RequestBody ItemDto item){
+    public ItemDto addItem(@RequestHeader("X-Sharer-User-Id") Long ownerId, @Valid @RequestBody ItemDto item) {
         log.info("Принят запрос на добавление предмета от пользователя с айди: {}", ownerId);
-        return itemService.addItem(ownerId,item);
+        return itemService.addItem(ownerId, item);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto findItem(@PathVariable Long itemId){
+    public ItemDto findItem(@PathVariable Long itemId) {
         log.info("Принят запрос на просмотр вещи от пользователя с айди: {}", itemId);
         return itemService.findItemById(itemId);
     }
 
     @GetMapping
-    public List<ItemDto> findAllUserItems(@RequestHeader("X-Sharer-User-Id") Long ownerId){
+    public List<ItemDto> findAllUserItems(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
         log.info("Принят запрос на просмотр всех вещей пользователя с айди: {}", ownerId);
         return itemService.findAllUserItems(ownerId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Long ownerId,
-                              @RequestBody ItemDto itemDto, @PathVariable Long itemId){
+                              @RequestBody ItemDto itemDto, @PathVariable Long itemId) {
         log.info("Принят запрос на обновление предмета от пользователя с айди: {}", ownerId);
-        return itemService.updateItem(ownerId,itemId,itemDto);
+        return itemService.updateItem(ownerId, itemId, itemDto);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findItemsByText(@RequestParam String text){
+    public List<ItemDto> findItemsByText(@RequestParam String text) {
         log.info("Принят запрос на поиск предмета");
         return itemService.findItemsByText(text);
     }

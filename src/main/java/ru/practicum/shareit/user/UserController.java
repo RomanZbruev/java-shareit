@@ -22,32 +22,33 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto addUser(@Valid @RequestBody UserDto userDto){
+    public UserDto addUser(@Valid @RequestBody UserDto userDto) {
         log.info("Получен запрос на добавление пользователя");
         return userService.addUser(userDto);
     }
 
     @GetMapping("/{userId}")
-    public UserDto findUserById(@PathVariable Long userId){
+    public UserDto findUserById(@PathVariable Long userId) {
         log.info("Получен запрос на просмотр пользователя");
         return userService.findById(userId);
     }
 
     @GetMapping
-    public List<UserDto> findAll(){
+    public List<UserDto> findAll() {
         log.info("Получен запрос на просмотр списка всех пользователей");
         return userService.findAll();
     }
+
     @DeleteMapping("/{userId}")
-    public void  removeById(@PathVariable Long userId){
+    public void removeById(@PathVariable Long userId) {
         log.info("Получен запрос на удаление пользователя с айди {}", userId);
         userService.removeById(userId);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable Long userId, @RequestBody UserDto userDto){
+    public UserDto updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
         log.info("Получен запрос на обновление пользователя с айди {}", userId);
-        return userService.updateUser(userId,userDto);
+        return userService.updateUser(userId, userDto);
     }
 
 

@@ -18,7 +18,7 @@ public class UserRepository {
     private Long id = 1L;
 
     public User save(User user) {
-        for (Map.Entry<Long,User> entry : users.entrySet()) {
+        for (Map.Entry<Long, User> entry : users.entrySet()) {
             if (entry.getValue().getEmail().equals(user.getEmail())) {
                 throw new ValidationException("Пользователь с такой почтой уже зарегистрирован");
             }
@@ -56,7 +56,7 @@ public class UserRepository {
     }
 
     public void update(User user) {
-        for (Map.Entry<Long,User> entry : users.entrySet()) {
+        for (Map.Entry<Long, User> entry : users.entrySet()) {
             if (entry.getValue().getEmail().equals(user.getEmail()) && entry.getValue().getId() != user.getId()) {
                 throw new ValidationException("Пользователь с такой почтой уже зарегистрирован");
             }
@@ -64,9 +64,9 @@ public class UserRepository {
         users.put(user.getId(), user);
     }
 
-    public List<Long> getUsersId(){ //вспомогательный метод для валидации в сервисе предметов
+    public List<Long> getUsersId() { //вспомогательный метод для валидации в сервисе предметов
         List<Long> ids = new ArrayList<>();
-        for (Map.Entry<Long,User> entry : users.entrySet()){
+        for (Map.Entry<Long, User> entry : users.entrySet()) {
             ids.add(entry.getValue().getId());
         }
         return ids;
