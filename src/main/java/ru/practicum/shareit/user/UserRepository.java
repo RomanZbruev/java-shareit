@@ -26,7 +26,7 @@ public class UserRepository {
         user.setId(id);
         id++;
         users.put(user.getId(), user);
-
+        log.info("Пользователь сохранен");
         return user;
     }
 
