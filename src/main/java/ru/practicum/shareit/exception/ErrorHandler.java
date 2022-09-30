@@ -5,17 +5,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice()
+@RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler()
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Нет в базе")
+    @ExceptionHandler({NotFoundException.class})
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(NotFoundException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 
-    @ExceptionHandler
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR, reason = "Неккоректный запрос")
+    @ExceptionHandler({BadRequestException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequestException(BadRequestException badRequestException){
+        return new ErrorResponse(badRequestException.getMessage());
+    }
+
+    @ExceptionHandler({ValidationException.class})
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleValidationException(
             ValidationException exception) {
         return new ErrorResponse(exception.getMessage());
