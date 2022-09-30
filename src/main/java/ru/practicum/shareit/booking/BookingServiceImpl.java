@@ -98,12 +98,12 @@ public class BookingServiceImpl implements BookingService {
         } else if (State.valueOf(state).equals(State.WAITING)) {
             bookings = bookingRepository.getBookingsByBooker_IdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING);
         } else if (State.valueOf(state).equals(State.CURRENT)) {
-            bookings = bookingRepository.
-                    getBookingsByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
+            bookings = bookingRepository
+                    .getBookingsByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
                             LocalDateTime.now(), LocalDateTime.now());
         } else if (State.valueOf(state).equals(State.PAST)) {
-            bookings = bookingRepository.
-                    getBookingsByBooker_IdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
+            bookings = bookingRepository
+                    .getBookingsByBooker_IdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
                             LocalDateTime.now(), LocalDateTime.now());
         } else if (State.valueOf(state).equals(State.FUTURE)) {
             bookings = bookingRepository
@@ -128,12 +128,12 @@ public class BookingServiceImpl implements BookingService {
         } else if (State.valueOf(state).equals(State.WAITING)) {
             bookings = bookingRepository.getBookingsByItemOwnerIdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING);
         } else if (State.valueOf(state).equals(State.CURRENT)) {
-            bookings = bookingRepository.
-                    getBookingsByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
+            bookings = bookingRepository
+                    .getBookingsByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
                             LocalDateTime.now(), LocalDateTime.now());
         } else if (State.valueOf(state).equals(State.PAST)) {
-            bookings = bookingRepository.
-                    getBookingsByItemOwnerIdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
+            bookings = bookingRepository
+                    .getBookingsByItemOwnerIdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
                             LocalDateTime.now(), LocalDateTime.now());
         } else if (State.valueOf(state).equals(State.FUTURE)) {
             bookings = bookingRepository
