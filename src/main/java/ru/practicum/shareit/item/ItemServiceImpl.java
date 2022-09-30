@@ -93,8 +93,11 @@ public class ItemServiceImpl implements ItemService {
             settingComments(item, item.getId()); // заполняем комментарии
         });
 
+        /*
+        itemsDto.sort((o1, o2) -> { // сортировка (в тестах для постмана нужно,
+        чтобы предметы без бронирования были в конце, а в тестах, для пулл-реквеста - наоборот...
+         Оставил пока что, вдруг потом опять пригодится)
 
-        itemsDto.sort((o1, o2) -> { // сортировка (в тестах нужно, чтобы предметы без бронирования были в конце)
             if (o1.getNextBooking() == (null) && o1.getLastBooking() == null &&
                     o2.getNextBooking() != null && o2.getLastBooking() != null) {
                 return -1;
@@ -109,6 +112,8 @@ public class ItemServiceImpl implements ItemService {
             }
             return o1.getId() > o2.getId() ? 1 : -1;
         });
+
+       */
 
         return itemsDto;
     }
