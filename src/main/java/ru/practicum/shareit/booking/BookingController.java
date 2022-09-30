@@ -1,8 +1,6 @@
 package ru.practicum.shareit.booking;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
@@ -22,7 +20,7 @@ public class BookingController {
     }
 
     @PostMapping
-    BookingDto addBooking(@RequestHeader("X-Sharer-User-Id") Long bookerId, @Valid @RequestBody BookingDto booking){
+    BookingDto addBooking(@RequestHeader("X-Sharer-User-Id") Long bookerId, @Valid @RequestBody BookingDto booking) {
         log.info("Принят запрос на бронь предмета от пользователя с айди: {}", bookerId);
         return bookingService.addBooking(bookerId, booking);
     }
@@ -35,23 +33,23 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    BookingDtoResponse getBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long bookingId){
+    BookingDtoResponse getBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long bookingId) {
         log.info("Принят запрос на просмотр брони предмета от пользователя с айди: {}", userId);
-        return bookingService.getBooking(userId,bookingId);
+        return bookingService.getBooking(userId, bookingId);
     }
 
     @GetMapping
     List<BookingDtoResponse> getUserBookings(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                             @RequestParam(defaultValue = "ALL",required = false) String state){
+                                             @RequestParam(defaultValue = "ALL", required = false) String state) {
         log.info("Принят запрос на просмотр бронирований пользователя");
-        return bookingService.getUserBookings(userId,state);
+        return bookingService.getUserBookings(userId, state);
     }
 
     @GetMapping("/owner")
     List<BookingDtoResponse> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                              @RequestParam(defaultValue = "ALL",required = false) String state){
+                                              @RequestParam(defaultValue = "ALL", required = false) String state) {
         log.info("Принят запрос на просмотр владельцем его бронирований");
-        return bookingService.getOwnerBookings(userId,state);
+        return bookingService.getOwnerBookings(userId, state);
     }
 
 }

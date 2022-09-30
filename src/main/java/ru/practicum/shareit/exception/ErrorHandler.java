@@ -16,7 +16,7 @@ public class ErrorHandler {
 
     @ExceptionHandler({BadRequestException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequestException(BadRequestException badRequestException){
+    public ErrorResponse handleBadRequestException(BadRequestException badRequestException) {
         return new ErrorResponse(badRequestException.getMessage());
     }
 

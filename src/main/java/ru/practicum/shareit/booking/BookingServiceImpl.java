@@ -9,10 +9,8 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +53,12 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Бронирования с таким айди не существует.");
         }
 
-        if (!booking.getItem().getOwnerId().equals(ownerId)){
+        if (!booking.getItem().getOwnerId().equals(ownerId)) {
             log.error("Попытка изменения статуса бронирования не владельцем");
             throw new NotFoundException("Попытка изменения статуса бронирования не владельцем");
         }
 
-        if (booking.getStatus().equals(Status.APPROVED)){
+        if (booking.getStatus().equals(Status.APPROVED)) {
             log.error("Ошибка изменения статуса. Владелец уже подтвердил бронирование");
             throw new BadRequestException("Ошибка изменения статуса. Владелец уже подтвердил бронирование");
         }
@@ -154,11 +152,10 @@ public class BookingServiceImpl implements BookingService {
         if (item == null) {
             log.error("Ошибка бронирования. Предмета с таким айди не существует");
             throw new NotFoundException("Ошибка бронирования. Предмета с таким айди не существует");
-        } else if (item.getOwnerId().equals(bookerId)){
+        } else if (item.getOwnerId().equals(bookerId)) {
             log.error("Ошибка бронирования. Попытка забронировать собственную вещь");
             throw new NotFoundException("Ошибка бронирования. Попытка забронировать собственную вещь");
-        }
-        else if (!userRepository.getAllIds().contains(bookerId)) {
+        } else if (!userRepository.getAllIds().contains(bookerId)) {
             log.error("Ошибка бронирования. Пользователя с таким айди не существует");
             throw new NotFoundException("Ошибка бронирования. Пользователя с таким айди не существует");
         } else if (!item.getAvailable()) {

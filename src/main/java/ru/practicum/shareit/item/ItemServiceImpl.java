@@ -13,7 +13,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
-import ru.practicum.shareit.item.dto.forItemBookingDto;
+import ru.practicum.shareit.item.dto.ForItemBookingDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -197,7 +197,7 @@ public class ItemServiceImpl implements ItemService {
 
     private void settingLastBookingForItem(ItemDtoWithBooking itemDtoWithBooking, Long itemId) {
         Pageable pageableLastBooking = PageRequest.of(0, 1, Sort.by(("end"))); //пишем ограничение для того, чтобы получить последнее броинрование
-        List<forItemBookingDto> bookings = bookingRepository.getLastBooking(itemId, pageableLastBooking);
+        List<ForItemBookingDto> bookings = bookingRepository.getLastBooking(itemId, pageableLastBooking);
         if (bookings.size() == 0) { //проверка на отсутсвие последнего броинрования
             itemDtoWithBooking.setLastBooking(null);
         } else {
@@ -207,7 +207,7 @@ public class ItemServiceImpl implements ItemService {
 
     private void settingNextBookingForItem(ItemDtoWithBooking itemDtoWithBooking, Long itemId) {
         Pageable pageableNextBooking = PageRequest.of(0, 1, Sort.by(Sort.Order.desc("start"))); //пишем ограничение для того, чтобы получить следующее броинрование
-        List<forItemBookingDto> booking = bookingRepository.getNextBooking(itemId, pageableNextBooking);
+        List<ForItemBookingDto> booking = bookingRepository.getNextBooking(itemId, pageableNextBooking);
         if (booking.size() == 0) { //проверка на отсутсвие следующего броинрования
             itemDtoWithBooking.setNextBooking(null);
         } else {

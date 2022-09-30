@@ -6,12 +6,11 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 
-
 @Builder
 @Getter
 @Setter
 @EqualsAndHashCode
-public class forItemBookingDto {
+public class ForItemBookingDto {
 
     @NotNull
     private Long id;
@@ -25,7 +24,7 @@ public class forItemBookingDto {
     @NotNull
     private Long bookerId;
 
-    public forItemBookingDto(Long id, LocalDateTime start, LocalDateTime end, Long bookerId){
+    public ForItemBookingDto(Long id, LocalDateTime start, LocalDateTime end, Long bookerId) {
         this.id = id;
         this.start = start;
         this.end = end;

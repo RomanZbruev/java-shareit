@@ -26,7 +26,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public ItemDtoWithBooking mapFromItemForItemWithBooking(Item item){
+    public ItemDtoWithBooking mapFromItemForItemWithBooking(Item item) {
         return ItemDtoWithBooking.builder()
                 .id(item.getId())
                 .name(item.getName())

@@ -1,11 +1,9 @@
 package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
@@ -25,18 +23,17 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public UserDto addUser(UserDto userDto) {
-            User user = userMapper.mapFromUserDto(userDto);
-            User inMemoryUser = userRepository.save(user);
-            log.info("Пользователь с айди: {} добавлен в хранилище", inMemoryUser.getId());
-            return userMapper.mapFromUser(inMemoryUser);
+        User user = userMapper.mapFromUserDto(userDto);
+        User inMemoryUser = userRepository.save(user);
+        log.info("Пользователь с айди: {} добавлен в хранилище", inMemoryUser.getId());
+        return userMapper.mapFromUser(inMemoryUser);
     }
 
     public UserDto findById(Long id) {
         User user = userRepository.getUserById(id);
-        if(user == null){
+        if (user == null) {
             throw new NotFoundException("Пользователь не найден");
-        }
-        else {
+        } else {
             return userMapper.mapFromUser(user);
         }
     }

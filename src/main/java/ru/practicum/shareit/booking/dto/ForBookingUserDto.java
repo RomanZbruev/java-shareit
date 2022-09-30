@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class forBookingUserDto {
+public class ForBookingUserDto {
 
     @NotNull
     Long id;
