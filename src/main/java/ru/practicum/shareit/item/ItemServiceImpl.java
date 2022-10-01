@@ -123,8 +123,8 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto updateItem(Long ownerId, Long itemId, ItemDto itemDto) {
         if (!userRepository.getAllIds().contains(ownerId)) {
-            log.error("Пользователя с айди " + ownerId +" не существует");
-            throw new NotFoundException("Пользователя с айди " + ownerId +" не существует");
+            log.error("Пользователя с айди " + ownerId + " не существует");
+            throw new NotFoundException("Пользователя с айди " + ownerId + " не существует");
         }
         Item inMemoryItem = itemRepository.getItemById(itemId);
         if (!inMemoryItem.getOwnerId().equals(ownerId)) {
