@@ -1,13 +1,14 @@
 package ru.practicum.shareit.booking.dto;
 
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@Data
 @Builder
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ForBookingUserDto {
 
     @NotNull

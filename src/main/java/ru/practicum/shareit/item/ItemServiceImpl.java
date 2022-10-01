@@ -52,7 +52,8 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto addItem(Long ownerId, ItemDto itemDto) {
         if (!userRepository.getAllIds().contains(ownerId)) {
-            throw new NotFoundException("Пользователя с таким айди не существует");
+            log.error("Пользователя с айди " + ownerId + " не существует");
+            throw new NotFoundException("Пользователя с айди " + ownerId + " не существует");
         }
         Item item = itemMapper.mapFromItemDto(itemDto);
         item.setOwnerId(ownerId);
@@ -64,14 +65,16 @@ public class ItemServiceImpl implements ItemService {
     public ItemDtoWithBooking findItemById(Long userId, Long itemId) {
         User user = userRepository.getUserById(userId);
         if (user == null) {
+            log.error("Пользователь не найден");
             throw new NotFoundException("Пользователь не найден");
         }
         Item item = itemRepository.getItemById(itemId);
         if (item == null) {
+            log.error("Вещь не найдена");
             throw new NotFoundException("Вещь не найдена");
         }
         ItemDtoWithBooking itemDtoWithBooking = itemMapper.mapFromItemForItemWithBooking(item);
-        settingComments(itemDtoWithBooking,itemId);
+        settingComments(itemDtoWithBooking, itemId);
         if (userId.equals(item.getOwnerId())) {
             settingLastBookingForItem(itemDtoWithBooking, itemId);
             settingNextBookingForItem(itemDtoWithBooking, itemId);
@@ -120,10 +123,12 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto updateItem(Long ownerId, Long itemId, ItemDto itemDto) {
         if (!userRepository.getAllIds().contains(ownerId)) {
-            throw new NotFoundException("Пользователя с таким айди не существует");
+            log.error("Пользователя с айди " + ownerId +" не существует");
+            throw new NotFoundException("Пользователя с айди " + ownerId +" не существует");
         }
         Item inMemoryItem = itemRepository.getItemById(itemId);
         if (!inMemoryItem.getOwnerId().equals(ownerId)) {
+            log.error("Ошибка редактирования предмета. Данный пользователь не является владельцем");
             throw new NotFoundException("Ошибка редактирования предмета. Данный пользователь не является владельцем");
         }
         Item item = Item.builder()

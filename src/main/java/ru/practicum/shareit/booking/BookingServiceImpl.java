@@ -49,8 +49,8 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtoResponse approve(Long ownerId, Long bookingId, Boolean approve) {
         Booking booking = bookingRepository.getBookingById(bookingId);
         if (booking == null) {
-            log.error("Бронирования с таким айди не существует.");
-            throw new NotFoundException("Бронирования с таким айди не существует.");
+            log.error("Бронирования с айди " + bookingId + " не существует.");
+            throw new NotFoundException("Бронирования с айди " + bookingId + " не существует.");
         }
 
         if (!booking.getItem().getOwnerId().equals(ownerId)) {
@@ -76,8 +76,8 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtoResponse getBooking(Long userId, Long bookingId) {
         Booking booking = bookingRepository.getBookingById(bookingId);
         if (booking == null) {
-            log.error("Бронирования с таким айди нет в базе");
-            throw new NotFoundException("Бронирования с таким айди нет в базе");
+            log.error("Бронирования с айди " + bookingId + " не существует.");
+            throw new NotFoundException("Бронирования с айди " + bookingId + " не существует.");
         }
         if (!userId.equals(booking.getBooker().getId()) && !userId.equals(booking.getItem().getOwnerId())) {
             log.error("Попытка получения бронирования от стороннего пользователя");
@@ -150,14 +150,14 @@ public class BookingServiceImpl implements BookingService {
     private void checkData(Long bookerId, BookingDto bookingDto) {
         Item item = itemRepository.getItemById(bookingDto.getItemId());
         if (item == null) {
-            log.error("Ошибка бронирования. Предмета с таким айди не существует");
-            throw new NotFoundException("Ошибка бронирования. Предмета с таким айди не существует");
+            log.error("Ошибка бронирования. Предмета не существует");
+            throw new NotFoundException("Ошибка бронирования. Предмета не существует");
         } else if (item.getOwnerId().equals(bookerId)) {
             log.error("Ошибка бронирования. Попытка забронировать собственную вещь");
             throw new NotFoundException("Ошибка бронирования. Попытка забронировать собственную вещь");
         } else if (!userRepository.getAllIds().contains(bookerId)) {
-            log.error("Ошибка бронирования. Пользователя с таким айди не существует");
-            throw new NotFoundException("Ошибка бронирования. Пользователя с таким айди не существует");
+            log.error("Ошибка бронирования. Пользователя с айди " + bookerId + " не существует");
+            throw new NotFoundException("Ошибка бронирования. Пользователя с айди " + bookerId + " не существует");
         } else if (!item.getAvailable()) {
             log.error("Ошибка бронирования. Данный предмет недоступен");
             throw new BadRequestException("Ошибка бронирования. Данный предмет недоступен");
