@@ -1,13 +1,11 @@
 package ru.practicum.shareit.exception;
 
-
-public class NotFoundException extends RuntimeException {
-    public NotFoundException(String message) {
+public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
         super(message);
     }
 
     public String getMessage() {
         return super.getMessage();
     }
-
 }

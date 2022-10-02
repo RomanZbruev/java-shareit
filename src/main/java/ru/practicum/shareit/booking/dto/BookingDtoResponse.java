@@ -10,12 +10,14 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class BookingDto {
-
+public class BookingDtoResponse {
     private Long id;
 
     @NotNull
-    private Long itemId;
+    private ForBookingItemDto item;
+
+    @NotNull
+    private ForBookingUserDto booker;
 
     @NotNull
     private LocalDateTime start;

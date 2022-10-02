@@ -1,16 +1,17 @@
 package ru.practicum.shareit.item.dto;
 
+
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+import java.util.List;
 
 @Builder
 @Getter
 @Setter
 @EqualsAndHashCode
-public class ItemDto {
+public class ItemDtoWithBooking {
 
     private Long id;
 
@@ -23,4 +24,12 @@ public class ItemDto {
     @NotNull
     private Boolean available;
 
+    @NotNull
+    private ForItemBookingDto lastBooking;
+
+    @NotNull
+    private ForItemBookingDto nextBooking;
+
+    @NotNull
+    private List<CommentDto> comments;
 }

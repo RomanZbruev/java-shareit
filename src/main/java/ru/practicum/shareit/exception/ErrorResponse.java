@@ -1,7 +1,7 @@
 package ru.practicum.shareit.exception;
 
 public class ErrorResponse {
-    private final String error;
+    String error;
 
     public ErrorResponse(String error) {
         this.error = error;
