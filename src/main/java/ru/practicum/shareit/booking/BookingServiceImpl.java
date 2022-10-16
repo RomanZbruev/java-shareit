@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
@@ -88,59 +90,128 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoResponse> getUserBookings(Long userId, String state) {
+    public List<BookingDtoResponse> getUserBookings(Long userId, String state, Integer from, Integer size) {
         List<Booking> bookings = new ArrayList<>();
         checkUserAndState(userId, state);
-        if (State.valueOf(state).equals(State.ALL)) {
-            bookings = bookingRepository.getBookingsByBooker_IdOrderByStartDesc(userId);
-        } else if (State.valueOf(state).equals(State.REJECTED)) {
-            bookings = bookingRepository.getBookingsByBooker_IdAndStatusEqualsOrderByStartDesc(userId, Status.REJECTED);
-        } else if (State.valueOf(state).equals(State.WAITING)) {
-            bookings = bookingRepository.getBookingsByBooker_IdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING);
-        } else if (State.valueOf(state).equals(State.CURRENT)) {
-            bookings = bookingRepository
-                    .getBookingsByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
-                            LocalDateTime.now(), LocalDateTime.now());
-        } else if (State.valueOf(state).equals(State.PAST)) {
-            bookings = bookingRepository
-                    .getBookingsByBooker_IdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
-                            LocalDateTime.now(), LocalDateTime.now());
-        } else if (State.valueOf(state).equals(State.FUTURE)) {
-            bookings = bookingRepository
-                    .getBookingsByBooker_IdAndStartAfterAndEndAfterOrderByStartDesc(userId,
-                            LocalDateTime.now(), LocalDateTime.now());
+        if (from == null || size == null) {
+            if (State.valueOf(state).equals(State.ALL)) {
+                bookings = bookingRepository.getBookingsByBooker_IdOrderByStartDesc(userId);
+            } else if (State.valueOf(state).equals(State.REJECTED)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStatusEqualsOrderByStartDesc(userId, Status.REJECTED);
+            } else if (State.valueOf(state).equals(State.WAITING)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING);
+            } else if (State.valueOf(state).equals(State.CURRENT)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now());
+            } else if (State.valueOf(state).equals(State.PAST)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now());
+            } else if (State.valueOf(state).equals(State.FUTURE)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStartAfterAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now());
+            }
+        } else if ((size == 0 && from == 0) || (size < 0 || from < 0)) {
+            log.error("Ошибка указания формата вывода запросов. " +
+                    "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                    "положительные числа");
+            throw new BadRequestException("Ошибка указания формата вывода запросов. " +
+                    "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                    "положительные числа");
+        } else {
+            int fromPage = from / size;
+            Pageable pageable = PageRequest.of(fromPage, size);
+            if (State.valueOf(state).equals(State.ALL)) {
+                bookings = bookingRepository.getBookingsByBooker_IdOrderByStartDesc(userId, pageable);
+            } else if (State.valueOf(state).equals(State.REJECTED)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStatusEqualsOrderByStartDesc(userId, Status.REJECTED, pageable);
+            } else if (State.valueOf(state).equals(State.WAITING)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING, pageable);
+            } else if (State.valueOf(state).equals(State.CURRENT)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now(), pageable);
+            } else if (State.valueOf(state).equals(State.PAST)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now(), pageable);
+            } else if (State.valueOf(state).equals(State.FUTURE)) {
+                bookings = bookingRepository
+                        .getBookingsByBooker_IdAndStartAfterAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now(), pageable);
+            }
         }
-
         return bookings
                 .stream()
                 .map(bookingMapper::mapFromBookingResponse)
                 .collect(Collectors.toList());
+
     }
 
     @Override
-    public List<BookingDtoResponse> getOwnerBookings(Long userId, String state) {
+    public List<BookingDtoResponse> getOwnerBookings(Long userId, String state, Integer from, Integer size) {
         List<Booking> bookings = new ArrayList<>();
         checkUserAndState(userId, state);
-        if (State.valueOf(state).equals(State.ALL)) {
-            bookings = bookingRepository.getBookingsByItemOwnerIdOrderByStartDesc(userId);
-        } else if (State.valueOf(state).equals(State.REJECTED)) {
-            bookings = bookingRepository.getBookingsByItemOwnerIdAndStatusEqualsOrderByStartDesc(userId, Status.REJECTED);
-        } else if (State.valueOf(state).equals(State.WAITING)) {
-            bookings = bookingRepository.getBookingsByItemOwnerIdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING);
-        } else if (State.valueOf(state).equals(State.CURRENT)) {
-            bookings = bookingRepository
-                    .getBookingsByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
-                            LocalDateTime.now(), LocalDateTime.now());
-        } else if (State.valueOf(state).equals(State.PAST)) {
-            bookings = bookingRepository
-                    .getBookingsByItemOwnerIdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
-                            LocalDateTime.now(), LocalDateTime.now());
-        } else if (State.valueOf(state).equals(State.FUTURE)) {
-            bookings = bookingRepository
-                    .getBookingsByItemOwnerIdAndStartAfterAndEndAfterOrderByStartDesc(userId,
-                            LocalDateTime.now(), LocalDateTime.now());
+        if (from == null || size == null) {
+            if (State.valueOf(state).equals(State.ALL)) {
+                bookings = bookingRepository.getBookingsByItemOwnerIdOrderByStartDesc(userId);
+            } else if (State.valueOf(state).equals(State.REJECTED)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStatusEqualsOrderByStartDesc(userId, Status.REJECTED);
+            } else if (State.valueOf(state).equals(State.WAITING)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING);
+            } else if (State.valueOf(state).equals(State.CURRENT)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now());
+            } else if (State.valueOf(state).equals(State.PAST)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now());
+            } else if (State.valueOf(state).equals(State.FUTURE)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStartAfterAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now());
+            }
+        } else if ((size == 0 && from == 0) || (size < 0 || from < 0)) {
+            log.error("Ошибка указания формата вывода запросов. " +
+                    "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                    "положительные числа");
+            throw new BadRequestException("Ошибка указания формата вывода запросов. " +
+                    "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                    "положительные числа");
+        } else {
+            int fromPage = from / size;
+            Pageable pageable = PageRequest.of(fromPage, size);
+            if (State.valueOf(state).equals(State.ALL)) {
+                bookings = bookingRepository.getBookingsByItemOwnerIdOrderByStartDesc(userId, pageable);
+            } else if (State.valueOf(state).equals(State.REJECTED)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStatusEqualsOrderByStartDesc(userId, Status.REJECTED, pageable);
+            } else if (State.valueOf(state).equals(State.WAITING)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStatusEqualsOrderByStartDesc(userId, Status.WAITING, pageable);
+            } else if (State.valueOf(state).equals(State.CURRENT)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now(), pageable);
+            } else if (State.valueOf(state).equals(State.PAST)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStartBeforeAndEndBeforeOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now(), pageable);
+            } else if (State.valueOf(state).equals(State.FUTURE)) {
+                bookings = bookingRepository
+                        .getBookingsByItemOwnerIdAndStartAfterAndEndAfterOrderByStartDesc(userId,
+                                LocalDateTime.now(), LocalDateTime.now(), pageable);
+            }
         }
-
         return bookings
                 .stream()
                 .map(bookingMapper::mapFromBookingResponse)
@@ -183,8 +254,8 @@ public class BookingServiceImpl implements BookingService {
         try {
             State.valueOf(state);
         } catch (IllegalArgumentException e) {
-            log.error("Unknown state: " + state);
-            throw new ValidationException("Unknown state: " + state);
+            log.error("Неизвестное состояние запроса аренды: " + state);
+            throw new ValidationException("Неизвестное состояние запроса аренды: " + state);
         }
     }
 }
