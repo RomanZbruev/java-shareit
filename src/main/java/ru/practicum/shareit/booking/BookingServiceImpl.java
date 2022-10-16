@@ -254,8 +254,8 @@ public class BookingServiceImpl implements BookingService {
         try {
             State.valueOf(state);
         } catch (IllegalArgumentException e) {
-            log.error("Неизвестное состояние запроса аренды: " + state);
-            throw new ValidationException("Неизвестное состояние запроса аренды: " + state);
+            log.error("Unknown state: " + state);
+            throw new ValidationException("Unknown state: " + state);
         }
     }
 }

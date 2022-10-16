@@ -632,7 +632,7 @@ public class BookingServiceImplTest {
 
         var exception = assertThrows(ValidationException.class, () ->
                 service.getUserBookings(user2.getId(), badState, null, null));
-        assertEquals(exception.getMessage(), "Неизвестное состояние запроса аренды: " + badState);
+        assertEquals(exception.getMessage(), "Unknown state: " + badState);
 
     }
 
