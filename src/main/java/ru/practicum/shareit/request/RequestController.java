@@ -20,7 +20,7 @@ public class RequestController {
 
     @PostMapping
     public RequestDto addRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                 @Valid @RequestBody RequestDto request) {
+                                 @RequestBody RequestDto request) {
         return requestService.addRequest(userId, request);
     }
 
