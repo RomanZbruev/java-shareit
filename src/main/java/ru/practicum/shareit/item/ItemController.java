@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
+import ru.practicum.shareit.request.model.GetRequestInfo;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,9 +34,11 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDtoWithBooking> findAllUserItems(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+    public List<ItemDtoWithBooking> findAllUserItems(@RequestHeader("X-Sharer-User-Id") Long ownerId,
+                                                     @RequestParam(required = false) Integer from,
+                                                     @RequestParam(required = false) Integer size) {
         log.info("Принят запрос на просмотр всех вещей пользователя с айди: {}", ownerId);
-        return itemService.findAllUserItems(ownerId);
+        return itemService.findAllUserItems(GetRequestInfo.of(ownerId,from,size));
     }
 
     @PatchMapping("/{itemId}")
@@ -46,9 +49,11 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> findItemsByText(@RequestParam String text) {
+    public List<ItemDto> findItemsByText(@RequestParam String text,
+                                         @RequestParam(required = false) Integer from,
+                                         @RequestParam(required = false) Integer size) {
         log.info("Принят запрос на поиск предмета");
-        return itemService.findItemsByText(text);
+        return itemService.findItemsByText(text,from,size);
     }
 
     @PostMapping("/{itemId}/comment")

@@ -16,12 +16,14 @@ import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
 import ru.practicum.shareit.item.dto.ForItemBookingDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.GetRequestInfo;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,9 +84,25 @@ public class ItemServiceImpl implements ItemService {
         return itemDtoWithBooking;
     }
 
-    public List<ItemDtoWithBooking> findAllUserItems(Long ownerId) {
-        List<Item> items = itemRepository.getItemsByOwnerId(ownerId);
-
+    public List<ItemDtoWithBooking> findAllUserItems(GetRequestInfo requestInfo) {
+        Long ownerId = requestInfo.getUserId();
+        Integer from = requestInfo.getFrom();
+        Integer size = requestInfo.getSize();
+        List<Item> items;
+        if (from == null || size == null) {
+            items = itemRepository.getItemsByOwnerId(ownerId);
+        } else if ((size == 0 && from == 0) || (size < 0 || from < 0)) {
+            log.error("Ошибка указания формата вывода запросов. " +
+                    "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                    "положительные числа");
+            throw new BadRequestException("Ошибка указания формата вывода запросов. " +
+                    "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                    "положительные числа");
+        } else {
+            int fromPage = from / size;
+            Pageable pageable = PageRequest.of(fromPage, size);
+            items = itemRepository.getItemsByOwnerId(ownerId, pageable);
+        }
         List<ItemDtoWithBooking> itemsDto = items  //маппируем объекты
                 .stream()
                 .map(itemMapper::mapFromItemForItemWithBooking)
@@ -117,7 +135,12 @@ public class ItemServiceImpl implements ItemService {
         });
 
        */
-
+        itemsDto.sort(((o1, o2) -> {
+            if (Objects.equals(o1.getId(), o2.getId())) {
+                return 0;
+            }
+            return o1.getId() > o2.getId() ? 1 : -1;
+        }));
         return itemsDto;
     }
 
@@ -157,18 +180,40 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-    public List<ItemDto> findItemsByText(String text) {
+    public List<ItemDto> findItemsByText(String text, Integer from, Integer size) {
+        List<ItemDto> items;
         if (text.isEmpty()) {
             log.info("Возвращение пустого списка вещей");
-            return List.of();
+            items = List.of();
         } else {
             log.info("Возвращение списка вещей");
-            return itemRepository
-                    .findItemsByNameOrDescriptionContainingIgnoreCaseAndAvailableEquals(text, text, true)
-                    .stream()
-                    .map(itemMapper::mapFromItem)
-                    .collect(Collectors.toList());
+            if (from == null || size == null) {
+                items = itemRepository
+                        .findItemsByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndAvailableEquals(text,
+                                text, true)
+                        .stream()
+                        .map(itemMapper::mapFromItem)
+                        .collect(Collectors.toList());
+            } else if ((size == 0 && from == 0) || (size < 0 || from < 0)) {
+                log.error("Ошибка указания формата вывода запросов. " +
+                        "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                        "положительные числа");
+                throw new BadRequestException("Ошибка указания формата вывода запросов. " +
+                        "Индекс первого элемента, начиная с 0, и количество элементов для отображения - " +
+                        "положительные числа");
+            } else {
+                int fromPage = from / size;
+                Pageable pageable = PageRequest.of(fromPage, size);
+                items = itemRepository
+                        .findItemsByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndAvailableEquals(text,
+                                text,
+                                        true, pageable)
+                        .stream()
+                        .map(itemMapper::mapFromItem)
+                        .collect(Collectors.toList());
+            }
         }
+        return items;
     }
 
     @Override
