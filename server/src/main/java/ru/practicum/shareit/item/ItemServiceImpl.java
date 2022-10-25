@@ -80,6 +80,7 @@ public class ItemServiceImpl implements ItemService {
         if (userId.equals(item.getOwnerId())) {
             settingLastBookingForItem(itemDtoWithBooking, itemId);
             settingNextBookingForItem(itemDtoWithBooking, itemId);
+
         }
         return itemDtoWithBooking;
     }
