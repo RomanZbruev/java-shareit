@@ -3,15 +3,19 @@ package shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class ItemController {
 
     private final ItemClient itemClient;
@@ -31,8 +35,8 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<Object> findAllUserItems(@RequestHeader("X-Sharer-User-Id") Long ownerId,
-                                                   @RequestParam(defaultValue = "0") Integer from,
-                                                   @RequestParam(defaultValue = "10") Integer size) {
+                                                   @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                   @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Принят запрос на просмотр всех вещей пользователя с айди: {}", ownerId);
         return itemClient.findAllUserItems(ownerId, from, size);
     }
@@ -47,8 +51,8 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Object> findItemsByText(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                                   @RequestParam String text,
-                                                  @RequestParam(defaultValue = "0") Integer from,
-                                                  @RequestParam(defaultValue = "10") Integer size) {
+                                                  @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                                  @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("Принят запрос на поиск предмета");
         return itemClient.findItemsByText(text, from, size, ownerId);
     }

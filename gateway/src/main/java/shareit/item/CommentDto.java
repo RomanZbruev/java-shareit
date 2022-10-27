@@ -1,9 +1,6 @@
 package shareit.item;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
+@AllArgsConstructor
 public class CommentDto {
 
     private Long id;
@@ -21,10 +19,4 @@ public class CommentDto {
 
     private LocalDateTime created;
 
-    public CommentDto(Long id, String text, String authorName, LocalDateTime created) {
-        this.id = id;
-        this.text = text;
-        this.authorName = authorName;
-        this.created = created;
-    }
 }
