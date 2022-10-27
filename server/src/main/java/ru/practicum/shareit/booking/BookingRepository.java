@@ -99,7 +99,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where (bk.start > current_timestamp and bk.item.id = :id)")
     List<ForItemBookingDto> getNextBooking(@Param("id") Long id, Pageable pageable);
 
-
     List<Booking> getBookingsByBooker_IdAndItemIdAndEndBeforeAndStatus(Long bookerId, Long itemId,
                                                                        LocalDateTime end, Status status);
 
